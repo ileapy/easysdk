@@ -61,24 +61,13 @@ class AccessToken extends UnionPayMiniClient
             return $result;
         }
 
-        $token = $this->requestToken($this->getCredentials());
+        $result = $this->send($this->getCredentials());
 
-        $this->setToken($token[$this->tokenKey], $token['openId'], $token['scope'], $token['unionId'],$token['expiresIn'] ?: 7200);
+        if (!isset($result[$this->tokenKey])) return $result;
 
-        return $token;
-    }
+        $this->setToken($result[$this->tokenKey], $result['openId'], $result['scope'], $result['unionId'],$result['expiresIn'] ?: 7200);
 
-    /**
-     * @param string $code
-     * @return array|mixed
-     * @author cfn <cfn@leapy.cn>
-     * @date 2021/8/16 13:43
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Psr\Cache\InvalidArgumentException
-     */
-    public function getRefreshedToken($code = "")
-    {
-        return $this->getToken($code,true);
+        return $cacheItem->get();
     }
 
     /**

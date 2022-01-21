@@ -55,23 +55,12 @@ class FrontToken extends UnionPayMiniClient
             return $result;
         }
 
-        $token = $this->requestToken($this->getCredentials());
+        $result = $this->send($this->getCredentials());
 
-        $this->setToken($token[$this->tokenKey], $token['expiresIn'] ?: 7200);
+        if (!isset($result[$this->tokenKey])) return $result;
 
-        return $token;
-    }
-
-    /**
-     * @return array|mixed
-     * @author cfn <cfn@leapy.cn>
-     * @date 2021/8/16 19:19
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Psr\Cache\InvalidArgumentException
-     */
-    public function getRefreshedToken()
-    {
-        return $this->getToken(true);
+        $this->setToken($result[$this->tokenKey], $result['expiresIn'] ?: 0);
+        return $cacheItem->get();
     }
 
     /**
