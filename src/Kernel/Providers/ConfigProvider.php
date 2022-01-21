@@ -7,6 +7,7 @@
 
 namespace easysdk\Kernel\Providers;
 
+use easysdk\Kernel\Support\Collection;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
@@ -24,7 +25,7 @@ class ConfigProvider implements ServiceProviderInterface
     public function register(Container $pimple)
     {
         !isset($pimple['config']) && $pimple['config'] = function ($app) {
-            return $app->getConfig();
+            return new Collection($app->getConfig());
         };
     }
 }

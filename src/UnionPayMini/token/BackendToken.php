@@ -35,41 +35,28 @@ class BackendToken extends UnionPayMiniClient
 
     /**
      * @param false $refresh
-     * @return array|mixed
-     * @author cfn <cfn@leapy.cn>
-     * @date 2021/8/16 19:20
+     * @return mixed
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Psr\Cache\InvalidArgumentException
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/21
      */
     public function getToken($refresh = false)
     {
         $cacheKey = $this->getCacheKey();
         $cache = $this->getCache();
-
         $cacheItem = $cache->getItem($cacheKey);
 
         if (!$refresh && $cacheItem->isHit() && $result = $cacheItem->get()) {
             return $result;
         }
 
-        $token = $this->requestToken($this->getCredentials());
+        $result = $this->send($this->getCredentials());
 
-        $this->setToken($token[$this->tokenKey], $token['expiresIn'] ?: 7200);
+        if (!isset($result[$this->tokenKey])) return $result;
 
-        return $token;
-
-    }
-
-    /**
-     * @return array|mixed
-     * @author cfn <cfn@leapy.cn>
-     * @date 2021/8/16 19:20
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Psr\Cache\InvalidArgumentException
-     */
-    public function getRefreshedToken()
-    {
-        return $this->getToken(true);
+        $this->setToken($result[$this->tokenKey], $result['expiresIn'] ?: 0);
+        return $cacheItem->get();
     }
 
     /**

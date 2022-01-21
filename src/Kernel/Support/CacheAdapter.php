@@ -20,7 +20,7 @@ use Symfony\Component\Cache\Adapter\RedisAdapter;
 class CacheAdapter
 {
     /**
-     * @var array
+     * @var Collection
      */
     private $config;
 
@@ -30,11 +30,11 @@ class CacheAdapter
     protected $type = 'file';
 
     /**
-     * @param array $config
+     * @param Collection $config
      */
-    public function __construct(array $config)
+    public function __construct(Collection $config)
     {
-        $this->config = $config;
+        $this->config = $config->toArray();
         $this->type = strtolower($this->config['cache']['type']);
     }
 

@@ -18,7 +18,8 @@
     },
     "autoload": {
         "psr-4": {
-            "easysdk\\": "src/"
+            "easysdk\\": "src/",
+            "tests\\": "tests/"
         }
     }
 }

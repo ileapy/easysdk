@@ -9,13 +9,21 @@ namespace easysdk\Kernel\Traits;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\Handler\CurlMultiHandler;
+use GuzzleHttp\Handler\StreamHandler;
 use GuzzleHttp\HandlerStack;
-use easysdk\Kernel\Support\AcpService;
+use Psr\Http\Message\ResponseInterface;
 
+/**
+ * Author cfn <cfn@leapy.cn>
+ * Date 2022/1/21
+ */
 trait HasHttpRequests
 {
     /**
-     * @var \GuzzleHttp\ClientInterface
+     * @var ClientInterface
      */
     protected $httpClient;
 
@@ -25,7 +33,7 @@ trait HasHttpRequests
     protected $middlewares = [];
 
     /**
-     * @var \GuzzleHttp\HandlerStack
+     * @var HandlerStack
      */
     protected $handlerStack;
 
@@ -39,9 +47,9 @@ trait HasHttpRequests
     ];
 
     /**
-     * Set guzzle default settings.
-     *
      * @param array $defaults
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/21
      */
     protected static function setDefaultOptions($defaults = [])
     {
@@ -49,7 +57,9 @@ trait HasHttpRequests
     }
 
     /**
-     * Return current guzzle default settings.
+     * @return array|array[]
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/21
      */
     protected static function getDefaultOptions()
     {
@@ -57,9 +67,10 @@ trait HasHttpRequests
     }
 
     /**
-     * Set GuzzleHttp\Client.
-     *
+     * @param ClientInterface $httpClient
      * @return $this
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/21
      */
     protected function setHttpClient(ClientInterface $httpClient)
     {
@@ -69,28 +80,28 @@ trait HasHttpRequests
     }
 
     /**
-     * Return GuzzleHttp\ClientInterface instance.
+     * @return Client|ClientInterface|mixed
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/21
      */
     protected function getHttpClient()
     {
         if (!($this->httpClient instanceof ClientInterface)) {
-            if (property_exists($this, 'app') && $this->app['http_client']) {
-                $this->httpClient = $this->app['http_client'];
+            if (property_exists($this, 'app') && $this->app['http']) {
+                $this->httpClient = $this->app['http'];
             } else {
                 $this->httpClient = new Client(['handler' => HandlerStack::create($this->getGuzzleHandler())]);
             }
         }
-
         return $this->httpClient;
     }
 
     /**
-     * Add a middleware.
-     *
      * @param callable $middleware
-     * @param string|null $name
-     *
+     * @param null $name
      * @return $this
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/21
      */
     protected function pushMiddleware(callable $middleware, $name = null)
     {
@@ -99,12 +110,13 @@ trait HasHttpRequests
         } else {
             array_push($this->middlewares, $middleware);
         }
-
         return $this;
     }
 
     /**
-     * Return all middlewares.
+     * @return array
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/21
      */
     protected function getMiddlewares()
     {
@@ -112,81 +124,80 @@ trait HasHttpRequests
     }
 
     /**
-     * Make a request.
-     *
-     * @param string $url
+     * @param $url
      * @param string $method
-     * @param array  $options
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @param array $options
+     * @return ResponseInterface
+     * @throws GuzzleException
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/21
      */
     protected function request($url, $method = 'GET', $options = [])
     {
         $method = strtoupper($method);
-
         $options = array_merge(self::$defaults, $options, ['handler' => $this->getHandlerStack()]);
-
         $options = $this->fixJsonIssue($options);
-
         if (property_exists($this, 'baseUri') && !is_null($this->baseUri)) {
             $options['base_uri'] = $this->baseUri;
         }
-
         $response = $this->getHttpClient()->request($method, $url, $options);
         $response->getBody()->rewind();
-
         return $response;
     }
 
     /**
+     * @param HandlerStack $handlerStack
      * @return $this
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/21
      */
     protected function setHandlerStack(HandlerStack $handlerStack)
     {
         $this->handlerStack = $handlerStack;
-
         return $this;
     }
 
     /**
-     * Build a handler stack.
+     * @return HandlerStack
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/21
      */
     protected function getHandlerStack()
     {
         if ($this->handlerStack) {
             return $this->handlerStack;
         }
-
         $this->handlerStack = HandlerStack::create($this->getGuzzleHandler());
-
         foreach ($this->middlewares as $name => $middleware) {
             $this->handlerStack->push($middleware, $name);
         }
-
         return $this->handlerStack;
     }
 
+    /**
+     * @param array $options
+     * @return array
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/21
+     */
     protected function fixJsonIssue(array $options)
     {
         if (isset($options['json']) && is_array($options['json'])) {
             $options['headers'] = array_merge(isset($options['headers']) ? $options['headers'] : [], ['Content-Type' => 'application/json']);
-
             if (empty($options['json'])) {
                 $options['body'] = \GuzzleHttp\json_encode($options['json'], JSON_FORCE_OBJECT);
             } else {
                 $options['body'] = \GuzzleHttp\json_encode($options['json'], JSON_UNESCAPED_UNICODE);
             }
-
             unset($options['json']);
         }
-
         return $options;
     }
 
     /**
-     * Get guzzle handler.
-     *
-     * @return callable
+     * @return callable|CurlHandler|CurlMultiHandler|StreamHandler|mixed
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/21
      */
     protected function getGuzzleHandler()
     {
@@ -195,14 +206,13 @@ trait HasHttpRequests
                 ? new $handler()
                 : $handler;
         }
-
         return \GuzzleHttp\choose_handler();
     }
 
     /**
      * @param array $credentials
      * @return mixed
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      * @throws \Exception
      * @author cfn <cfn@leapy.cn>
      * @date 2021/8/16 10:06
@@ -210,31 +220,22 @@ trait HasHttpRequests
     protected function requestToken($credentials)
     {
         $response = $this->sendRequest($credentials);
-        $contents = $response->getBody()->getContents();
-
-        $result = json_decode($contents, true);
-
-        if (!$result && is_string($contents)) $result = AcpService::parseQString($contents);
-
-        if (empty($result) || (isset($result['resp']) && $result['resp'] != '00') || (!isset($result['resp']) && !isset($result['respCode'])))
-        {
-            throw new \Exception('Request fail: '.json_encode($result, JSON_UNESCAPED_UNICODE));
-        }
-
-        return isset($result['resp']) && isset($result['params']) ? $result['params'] : $result;
+        return $response->getBody()->getContents();
     }
 
     /**
-     * Send http request.
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @param $credentials
+     * @return ResponseInterface
+     * @throws GuzzleException
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/21
      */
     protected function sendRequest($credentials)
     {
         $options = [
             ('GET' === $this->requestMethod) ? 'query' : $this->config['http_post_data_type'] => $credentials,
         ];
-        return $this->setHttpClient($this->app['http_client'])->request($this->getEndpoint(), $this->requestMethod, $options);
+        return $this->setHttpClient($this->app['http'])->request($this->getEndpoint(), $this->requestMethod, $options);
     }
 
     /**
@@ -244,16 +245,6 @@ trait HasHttpRequests
      */
     protected function getEndpoint()
     {
-        // payment_model、test_file_uri、test_base_uri是支付中的配置参数
-        if (isset($this->config['payment_model']))
-        {
-            // 文件下载时endpoint 为空
-            $this->endpoint = empty($this->endpoint) ?
-                ($this->config['payment_model'] ? $this->config['test_file_uri'] : $this->config['file_uri'])
-                :
-                ((($this->config['payment_model']) ? $this->config['test_base_uri'] : $this->config['base_uri']) . $this->endpoint);
-        }
-
         return $this->endpoint;
     }
 }

@@ -8,6 +8,10 @@ use easysdk\Kernel\BaseContainer;
  * User: cfn <cfn@leapy.cn>
  * Datetime: 2022/1/21
  * Copyright: easysdk
+ *
+ * @property \easysdk\UnionPayMini\token\AccessToken            $access_token
+ * @property \easysdk\UnionPayMini\token\BackendToken           $backend_token
+ * @property \easysdk\UnionPayMini\token\FrontToken             $front_token
  */
 class Application extends BaseContainer
 {
@@ -15,7 +19,7 @@ class Application extends BaseContainer
      * @var array
      */
     protected $providers = [
-
+        token\ServiceProvider::class
     ];
 
     /**
@@ -43,12 +47,11 @@ EOF
     ];
 
     /**
-     * Handle dynamic calls.
      * @param $method
      * @param $args
      * @return mixed
-     * @author cfn <cfn@leapy.cn>
-     * @date 2021/8/18 22:24
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/21
      */
     public function __call($method, $args)
     {

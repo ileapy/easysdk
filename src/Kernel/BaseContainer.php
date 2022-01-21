@@ -96,4 +96,27 @@ class BaseContainer extends Container
             parent::register(new $provider());
         }
     }
+
+    /**
+     * Magic get access.
+     *
+     * @param string $id
+     *
+     * @return mixed
+     */
+    public function __get($id)
+    {
+        return $this->offsetGet($id);
+    }
+
+    /**
+     * Magic set access.
+     *
+     * @param string $id
+     * @param mixed  $value
+     */
+    public function __set($id, $value)
+    {
+        $this->offsetSet($id, $value);
+    }
 }
