@@ -23,26 +23,7 @@ class Encrypt
      */
     public static function encrypt3DES($input, $key)
     {
-        $key = pack("H48", $key);
-        $input = self::pkcs5Pad($input);
-        $data = openssl_encrypt($input,'DES-EDE3',$key,OPENSSL_RAW_DATA | OPENSSL_NO_PADDING,'');
-        return self::removeBR(base64_encode($data));
-    }
-
-    /**
-     * @param $text
-     * @return string
-     * Author cfn <cfn@leapy.cn>
-     * Date 2022/1/19
-     */
-    private static function pkcs5Pad($text) {
-        $pad = 8 - (strlen($text) % 8);
-        $input = $text . str_repeat(chr($pad), $pad);
-        if (strlen($input) % 8) {
-            $input = str_pad($input,
-                strlen($input) + 8 - strlen($input) % 8, "\0");
-        }
-        return $input;
+        return base64_encode(openssl_encrypt($input,'DES-EDE3',pack("H48", $key),OPENSSL_RAW_DATA));
     }
 
     /**
@@ -53,46 +34,7 @@ class Encrypt
      */
     public static function decrypt3DES($encrypted, $key)
     {
-        $key = pack("H48", $key);
-        $decrypted = openssl_decrypt(base64_decode($encrypted),'DES-EDE3',$key,OPENSSL_RAW_DATA | OPENSSL_NO_PADDING,'');
-        return self::stripPKSC5Padding($decrypted);
-    }
-
-    /**
-     * @param $source
-     * @return false|string
-     */
-    public static function stripPKSC5Padding($source)
-    {
-        $char = substr($source, -1, 1);
-        $num = ord($char);
-        if ($num > 8) {
-            return $source;
-        }
-        $len = strlen($source);
-        for ($i = $len - 1; $i >= $len - $num; $i--) {
-            if (ord(substr($source, $i, 1)) != $num) {
-                return $source;
-            }
-        }
-        return substr($source, 0, -$num);
-    }
-
-    /**
-     * @param $str
-     * @return string
-     */
-    public static function removeBR($str)
-    {
-        $len = strlen($str);
-        $newstr = "";
-        $str = str_split($str);
-        for ($i = 0; $i < $len; $i++) {
-            if ($str[$i] != '\n' and $str[$i] != '\r') {
-                $newstr .= $str[$i];
-            }
-        }
-        return $newstr;
+        return openssl_decrypt(base64_decode($encrypted), 'des-ede3', pack("H48", $key), OPENSSL_PKCS1_PADDING);
     }
 
     /**

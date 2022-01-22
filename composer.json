@@ -14,12 +14,13 @@
         "guzzlehttp/guzzle": "^6.2 || ^7.0",
         "symfony/cache": "^3.3 || ^4.3 || ^5.0",
         "symfony/http-foundation": "^2.7 || ^3.0 || ^4.0 || ^5.0",
-        "pimple/pimple": "^3.0"
+        "pimple/pimple": "^3.0",
+        "ext-json": "*",
+        "ext-openssl": "*"
     },
     "autoload": {
         "psr-4": {
-            "easysdk\\": "src/",
-            "tests\\": "tests/"
+            "easysdk\\": "src/"
         }
     }
 }

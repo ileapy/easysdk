@@ -7,10 +7,13 @@
 
 namespace easysdk\UnionPayMini\token;
 
-
 use easysdk\Kernel\Client\UnionPayMiniClient;
 use easysdk\Kernel\Support\Str;
 
+/**
+ * Class BackendToken
+ * @package: easysdk\UnionPayMini\token
+ */
 class BackendToken extends UnionPayMiniClient
 {
     /**
@@ -31,7 +34,7 @@ class BackendToken extends UnionPayMiniClient
     /**
      * @var string
      */
-    protected $cachePrefix = 'unionpay.miniprogram.access.backend_token.';
+    protected $cachePrefix = 'easysdk.miniprogram.access.backend_token.';
 
     /**
      * @param false $refresh

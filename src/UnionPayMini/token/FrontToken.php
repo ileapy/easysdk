@@ -12,7 +12,7 @@ use easysdk\Kernel\Support\Str;
 
 /**
  * Class FrontToken
- * @package unionpay\MiniProgram\access
+ * @package easysdk\UnionPayMini\access
  */
 class FrontToken extends UnionPayMiniClient
 {
@@ -34,7 +34,7 @@ class FrontToken extends UnionPayMiniClient
     /**
      * @var string
      */
-    protected $cachePrefix = 'unionpay.miniprogram.access.front_token.';
+    protected $cachePrefix = 'easysdk.miniprogram.access.front_token.';
 
     /**
      * @param false $refresh

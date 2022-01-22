@@ -11,7 +11,7 @@ use easysdk\Kernel\Client\UnionPayMiniClient;
 
 /**
  * Class AccessToken
- * @package unionpay\MiniProgram\access
+ * @package easysdk\UnionPayMini\access
  */
 class AccessToken extends UnionPayMiniClient
 {
@@ -33,7 +33,7 @@ class AccessToken extends UnionPayMiniClient
     /**
      * @var string
      */
-    protected $cachePrefix = 'unionpay.miniprogram.access.access_token.';
+    protected $cachePrefix = 'easysdk.miniprogram.access.access_token.';
 
     /**
      * @var string
