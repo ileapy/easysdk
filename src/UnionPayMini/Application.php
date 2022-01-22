@@ -13,7 +13,16 @@ use easysdk\Kernel\BaseContainer;
  * @property \easysdk\UnionPayMini\token\BackendToken           $backend_token
  * @property \easysdk\UnionPayMini\token\FrontToken             $front_token
  * @property \easysdk\UnionPayMini\crypto\Client                $crypto
-
+ * @property \easysdk\UnionPayMini\user\Client                  $user
+ * @property \easysdk\UnionPayMini\coupon\Client                $coupon
+ * @property \easysdk\UnionPayMini\contract\Client              $contract
+ * @property \easysdk\UnionPayMini\message\Client               $message
+ * @property \easysdk\UnionPayMini\notify\Client                $notify
+ * @property \easysdk\UnionPayMini\redpack\Client               $redpack
+ * @property \easysdk\UnionPayMini\qual\Client                  $qual
+ * @property \easysdk\UnionPayMini\secure\Client                $secure
+ * @property \easysdk\UnionPayMini\base\Client                  $base
+ * @property \easysdk\UnionPayMini\face\Client                  $face
  */
 class Application extends BaseContainer
 {
@@ -22,7 +31,17 @@ class Application extends BaseContainer
      */
     protected $providers = [
         token\ServiceProvider::class,
-        crypto\ServiceProvider::class
+        crypto\ServiceProvider::class,
+        contract\ServiceProvider::class,
+        coupon\ServiceProvider::class,
+        face\ServiceProvider::class,
+        message\ServiceProvider::class,
+        notify\ServiceProvider::class,
+        qual\ServiceProvider::class,
+        redpack\ServiceProvider::class,
+        secure\ServiceProvider::class,
+        user\ServiceProvider::class,
+        base\ServiceProvider::class
     ];
 
     /**
