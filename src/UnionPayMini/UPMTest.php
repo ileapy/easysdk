@@ -30,6 +30,9 @@ class UPMTest extends TestCase
         'symmetricKey' => 'f2dae558ea92a47a13d9166e8531e940f2dae558ea92a47a',
         'privateKey' => '',
         'debug' => true,
+        'cache' => [
+            'type' => 'Redis',
+        ]
     ];
 
     /**

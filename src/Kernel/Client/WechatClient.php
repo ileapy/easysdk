@@ -46,16 +46,16 @@ class WechatClient
     }
 
     /**
-     * @param null $credentials
-     * @return mixed
+     * @param null $credentials 数据
+     * @return array|mixed
      * @throws \GuzzleHttp\Exception\GuzzleException
      * Author cfn <cfn@leapy.cn>
-     * Date 2022/1/22
+     * Date 2022/1/24
      */
     protected function send($credentials=null)
     {
         $contents = $this->requestToken($credentials);
-        return $contents ? json_decode($contents, JSON_UNESCAPED_UNICODE) : [];
+        return $contents ? json_decode($contents, JSON_UNESCAPED_UNICODE) ?: $contents : [];
     }
 
     /**
@@ -68,7 +68,7 @@ class WechatClient
     protected function uploadFile($credentials)
     {
         $contents = $this->sendFileRequest($credentials);
-        return $contents ? json_decode($contents, JSON_UNESCAPED_UNICODE) : [];
+        return $contents ? json_decode($contents, JSON_UNESCAPED_UNICODE) ?: $contents : [];
     }
 
     /**

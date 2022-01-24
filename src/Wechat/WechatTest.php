@@ -290,8 +290,43 @@ class WechatTest extends TestCase
      */
     public function testMaterial()
     {
-//        $result = $this->app->material->upload('D:\\1.jpg','image');
-//        print_r($result);
-//        $this->assertArrayHasKey('media_id',$result);
+        $result = $this->app->material->uploadMedia('D:\\1.jpg','image');
+        print_r($result);
+        $this->assertArrayHasKey('media_id',$result);
+
+        $result = $this->app->material->getMedia('yUJH83D-ZJXHbX4l0DViigMGEiDlYtpaPDda101m7bxp6jtK3uSoRnih3M_7GmmR');
+        print_r($result);
+
+        $result = $this->app->material->uploadImg('D:\\1.jpg');
+        print_r($result);
+        $this->assertArrayHasKey('url',$result);
+
+        $result = $this->app->material->addMaterial('D:\\1.mp4','video','测试视频','搞笑视频测试');
+        print_r($result);
+        $this->assertArrayHasKey('media_id',$result);
+
+        $result = $this->app->material->getMaterial('JV623HV_LTDSEJsN0YLtre7q4Mk_FvL4FLKpmTXvSbo');
+        print_r($result);
+
+        $result = $this->app->material->delMaterial('JV623HV_LTDSEJsN0YLtre7q4Mk_FvL4FLKpmTXvSbo');
+        print_r($result);
+        $this->assertArrayHasKey('errcode',$result);
+
+        $result = $this->app->material->getMaterialCount();
+        print_r($result);
+        $this->assertArrayHasKey('voice_count',$result);
+        $this->assertArrayHasKey('video_count',$result);
+        $this->assertArrayHasKey('image_count',$result);
+        $this->assertArrayHasKey('news_count',$result);
+
+        $result = $this->app->material->batchGetMaterial('video');
+        print_r($result);
+        $this->assertArrayHasKey('total_count',$result);
+
+        $result = $this->app->material->addNews([]);
+        print_r($result);
+
+        $result = $this->app->material->updateNews('',[],0);
+        print_r($result);
     }
 }
