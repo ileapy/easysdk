@@ -8,6 +8,7 @@ namespace easysdk;
  *
  * @method static \easysdk\UnionPayMini\Application        UnionPayMini(array $config)
  * @method static \easysdk\WechatMini\Application          WechatMini(array $config)
+ * @method static \easysdk\Wechat\Application              Wechat(array $config)
  */
 class Factory
 {

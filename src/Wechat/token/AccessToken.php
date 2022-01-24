@@ -7,13 +7,13 @@
 
 namespace easysdk\Wechat\token;
 
-use easysdk\Kernel\Client\WechatMiniClient;
+use easysdk\Kernel\Client\WechatClient;
 
 /**
  * Class AccessToken
  * @package easysdk\UnionPayMini\access
  */
-class AccessToken extends WechatMiniClient
+class AccessToken extends WechatClient
 {
     /**
      * @var string
@@ -84,7 +84,7 @@ class AccessToken extends WechatMiniClient
      */
     protected function getCacheKey()
     {
-        return $this->cachePrefix.md5(json_encode($this->getCredentials()));
+        return $this->cachePrefix.md5(json_encode($this->getUnionKey()));
     }
 
     /**
@@ -92,7 +92,7 @@ class AccessToken extends WechatMiniClient
      * @author cfn <cfn@leapy.cn>
      * @date 2021/8/16 11:21
      */
-    protected function getCredentials()
+    protected function getUnionKey()
     {
         return [
             'appId' => $this->config['appid'],

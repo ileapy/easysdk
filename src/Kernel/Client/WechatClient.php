@@ -57,4 +57,27 @@ class WechatClient
         $contents = $this->requestToken($credentials);
         return $contents ? json_decode($contents, JSON_UNESCAPED_UNICODE) : [];
     }
+
+    /**
+     * @param $data
+     * @return mixed
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/22
+     */
+    protected function getCredentials($data)
+    {
+        return array_filter($data);
+    }
+
+    /**
+     * @param $uri
+     * @param $data
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/22
+     */
+    protected function setEndpoint($uri, $data = [])
+    {
+        $data['access_token'] = $this->app->access_token->getToken()['access_token'];
+        $this->endpoint = $uri . "?" . http_build_query(array_filter($data));
+    }
 }

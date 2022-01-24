@@ -11,7 +11,7 @@ use easysdk\Factory;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class Test
+ * Class WechatTest
  * @package: easysdk
  */
 class WechatTest extends TestCase
@@ -25,8 +25,8 @@ class WechatTest extends TestCase
      * @var array
      */
     public $options = [
-        'appid' => 'wx7cec1c8df7df74a3',
-        'secret' => 'd0a76666784ed6770d28f874d17b7e06'
+        'appid' => 'wx035fd07c314ed3f7',
+        'secret' => 'bd8b503c9d97c34e522f38c17b4f9351'
     ];
 
     /**
@@ -37,31 +37,7 @@ class WechatTest extends TestCase
     public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        $this->app = Factory::WechatMini($this->options);
-    }
-
-
-    /**
-     * 检查加密信息是否由微信生成
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * Author cfn <cfn@leapy.cn>
-     * Date 2022/1/22
-     */
-    public function testAuth()
-    {
-//        $result = $this->app->auth->code2Session("073EDk100vC9cN14le100aQ71p0EDk1m");
-//        print_r($result);
-//        $this->assertArrayHasKey('session_key',$result);
-//        $this->assertArrayHasKey('openid',$result);
-
-//        $result = $this->app->auth->checkEncryptedData("ej9FNJgeqoV7EIX00rgthvcjKb9XqsnZCY+BAcbP1Q76/5S51FNIwYmJA2TkHZWvdqeToWv0rwvOI22YhBs+yRYZwLhszbnqFxOKvWG67s16BxAPN6UuhV1XLW2htP0GyGWdWE3ENshUGMXJ2xwlIzp9NuZfexGJWjO+8QNeM6Ni3u/r5lXroxjJxogNzy0RHC+x9FFjSphdknasS310PA==");
-//        print_r($result);
-//        $this->assertArrayHasKey('session_key',$result);
-
-        $result = $this->app->auth->getPaidUnionId("aaa111");
-        var_dump($result);
-        $this->assertArrayHasKey('session_key',$result);
-
+        $this->app = Factory::Wechat($this->options);
     }
 
     /**
@@ -74,19 +50,99 @@ class WechatTest extends TestCase
     public function testToken()
     {
         $result = $this->app->access_token->getToken(false);
+        print_r($result);
         $this->assertArrayHasKey('access_token',$result);
     }
 
     /**
-     * 二维码
      * @throws \GuzzleHttp\Exception\GuzzleException
      * Author cfn <cfn@leapy.cn>
-     * Date 2022/1/22
+     * Date 2022/1/24
      */
-    public function testQrcode()
+    public function testBase()
     {
-        $result = $this->app->qrcode->createQRCode('pages/index/index');
-        var_dump($result);
-//        $this->assertArrayHasKey('access_token',$result);
+        $result = $this->app->base->getApiDomainIp();
+        print_r($result);
+        $this->assertArrayHasKey('ip_list',$result);
+    }
+
+    /**
+     * 用户管理
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/24
+     */
+    public function testUser()
+    {
+        $result = $this->app->user->getUser();
+        print_r($result);
+        $this->assertArrayHasKey('count',$result);
+
+        $result = $this->app->user->userInfo('o5bZq53AKZnAoQd9avKYEFcm1X3c');
+        print_r($result);
+        $this->assertArrayHasKey('openid',$result);
+
+        $result = $this->app->user->updateRemark('o5bZq53AKZnAoQd9avKYEFcm1X3c','测试备注');
+        print_r($result);
+        $this->assertArrayHasKey('errcode',$result);
+        $this->assertEquals(0,$result['errcode']);
+
+        $result = $this->app->user->tagUser(2);
+        print_r($result);
+        $this->assertArrayHasKey('count',$result);
+    }
+
+    /**
+     * 用户标签管理
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/24
+     */
+    public function testTags()
+    {
+        $result = $this->app->tags->get();
+        print_r($result);
+        $this->assertArrayHasKey('tags',$result);
+
+        $result = $this->app->tags->create('测试标签');
+        print_r($result);
+        $this->assertArrayHasKey('tag',$result);
+
+        $result = $this->app->tags->update(100,'期望客户');
+        print_r($result);
+        $this->assertArrayHasKey('errcode',$result);
+        $this->assertEquals(0,$result['errcode']);
+
+        $result = $this->app->tags->delete(100);
+        print_r($result);
+        $this->assertArrayHasKey('errcode',$result);
+        $this->assertEquals(0,$result['errcode']);
+
+        $result = $this->app->tags->getidlist('o5bZq53AKZnAoQd9avKYEFcm1X3c');
+        print_r($result);
+        $this->assertArrayHasKey('tagid_list',$result);
+
+        $result = $this->app->tags->batchtagging(2,['o5bZq53AKZnAoQd9avKYEFcm1X3c']);
+        print_r($result);
+        $this->assertArrayHasKey('errcode',$result);
+        $this->assertEquals(0,$result['errcode']);
+
+        $result = $this->app->tags->batchuntagging(2,['o5bZq53AKZnAoQd9avKYEFcm1X3c']);
+        print_r($result);
+        $this->assertArrayHasKey('errcode',$result);
+        $this->assertEquals(0,$result['errcode']);
+    }
+
+    /**
+     * 微信二维码
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/24
+     */
+    public function qrcode()
+    {
+        $result = $this->app->qrcode->create('测试标签');
+        print_r($result);
+        $this->assertArrayHasKey('tag',$result);
     }
 }

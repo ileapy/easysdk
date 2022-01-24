@@ -9,7 +9,11 @@ use easysdk\Kernel\BaseContainer;
  * Datetime: 2022/1/21
  * Copyright: easysdk
  *
- * @property \easysdk\WechatMini\token\AccessToken              $access_token
+ * @property \easysdk\Wechat\token\AccessToken              $access_token
+ * @property \easysdk\Wechat\base\Client                    $base
+ * @property \easysdk\Wechat\user\Client                    $user
+ * @property \easysdk\Wechat\tags\Client                    $tags
+ * @property \easysdk\Wechat\qrcode\Client                  $qrcode
  */
 class Application extends BaseContainer
 {
@@ -17,7 +21,11 @@ class Application extends BaseContainer
      * @var array
      */
     protected $providers = [
-        token\ServiceProvider::class
+        token\ServiceProvider::class,
+        base\ServiceProvider::class,
+        user\ServiceProvider::class,
+        tags\ServiceProvider::class,
+        qrcode\ServiceProvider::class
     ];
 
     /**
