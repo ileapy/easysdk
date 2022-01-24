@@ -225,6 +225,19 @@ trait HasHttpRequests
 
     /**
      * @param $credentials
+     * @return string
+     * @throws GuzzleException
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/24
+     */
+    protected function sendFileRequest($credentials)
+    {
+        $response = $this->request($this->getEndpoint(), $this->requestMethod, $credentials);
+        return $response->getBody()->getContents();
+    }
+
+    /**
+     * @param $credentials
      * @return ResponseInterface
      * @throws GuzzleException
      * Author cfn <cfn@leapy.cn>

@@ -59,6 +59,19 @@ class WechatClient
     }
 
     /**
+     * @param $credentials
+     * @return array|mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/24
+     */
+    protected function uploadFile($credentials)
+    {
+        $contents = $this->sendFileRequest($credentials);
+        return $contents ? json_decode($contents, JSON_UNESCAPED_UNICODE) : [];
+    }
+
+    /**
      * @param $data
      * @return mixed
      * Author cfn <cfn@leapy.cn>

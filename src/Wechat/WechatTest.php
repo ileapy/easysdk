@@ -139,10 +139,159 @@ class WechatTest extends TestCase
      * Author cfn <cfn@leapy.cn>
      * Date 2022/1/24
      */
-    public function qrcode()
+    public function testQrcode()
     {
-        $result = $this->app->qrcode->create('测试标签');
+        $result = $this->app->qrcode->create(1);
         print_r($result);
-        $this->assertArrayHasKey('tag',$result);
+        $this->assertArrayHasKey('url',$result);
+
+        $result = $this->app->qrcode->showqrcode($result['ticket']);
+        print_r($result);
+
+        $result = $this->app->qrcode->shorten('0239sRJ4BSdGD1NUwK1x1M');
+        print_r($result);
+        $this->assertArrayHasKey('short_key',$result);
+
+        $result = $this->app->qrcode->fetchShorten('Agir6RJNDvNruwk');
+        print_r($result);
+        $this->assertArrayHasKey('errcode',$result);
+    }
+
+    /**
+     * 公众号菜单
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/24
+     */
+    public function testMenu()
+    {
+        $menu = [
+            'button' => array(
+                array(
+                    'name' => '商户',
+                    'sub_button' => array(
+                        array(
+                            'name' => '商户登录',
+                            'type' => 'view',
+                            'url' => 'https://wechat.esw235.com/wechat/login/authLogin.html?redirect=http://wechat.esw235.com/MerchantImpower'
+                        ),
+                        array(
+                            'name' => '门店登录',
+                            'type' => 'view',
+                            'url' => 'https://wechat.esw235.com/wechat/login/authLogin.html?redirect=http://wechat.esw235.com/StoreImpower'
+                        )
+                    )
+                ),
+                array(
+                    'name' => '代理',
+                    'sub_button' => array(
+                        array(
+                            'name' => '代理登录',
+                            'type' => 'view',
+                            'url' => 'https://wechat.esw235.com/AgentImpower'
+                        ),
+                        array(
+                            'name' => '业务员登录',
+                            'type' => 'view',
+                            'url' => 'https://wechat.esw235.com/SalesmanLogin'
+                        ),
+                        array(
+                            'name' => '卡券广场',
+                            'type' => 'view',
+                            'url' => 'https://wechat.esw235.com/coupon'
+                        ),
+                    )
+                ),
+                array(
+                    'name' => '收款APP下载',
+                    'type' => 'view',
+                    'url' => 'https://www.esw235.com/index/app_download/index'
+                )
+            )
+        ];
+        $result = $this->app->menu->create($menu);
+        print_r($result);
+        $this->assertArrayHasKey('errcode',$result);
+
+        $result = $this->app->menu->query();
+        print_r($result);
+        $this->assertArrayHasKey('selfmenu_info',$result);
+
+        $result = $this->app->menu->delete();
+        print_r($result);
+        $this->assertArrayHasKey('errcode',$result);
+
+        $menu = [
+            'button' => array(
+                array(
+                    'name' => '商户',
+                    'sub_button' => array(
+                        array(
+                            'name' => '商户登录',
+                            'type' => 'view',
+                            'url' => 'https://wechat.esw235.com/wechat/login/authLogin.html?redirect=http://wechat.esw235.com/MerchantImpower'
+                        ),
+                        array(
+                            'name' => '门店登录',
+                            'type' => 'view',
+                            'url' => 'https://wechat.esw235.com/wechat/login/authLogin.html?redirect=http://wechat.esw235.com/StoreImpower'
+                        )
+                    )
+                ),
+                array(
+                    'name' => '代理',
+                    'sub_button' => array(
+                        array(
+                            'name' => '代理登录',
+                            'type' => 'view',
+                            'url' => 'https://wechat.esw235.com/AgentImpower'
+                        ),
+                        array(
+                            'name' => '业务员登录',
+                            'type' => 'view',
+                            'url' => 'https://wechat.esw235.com/SalesmanLogin'
+                        ),
+                        array(
+                            'name' => '卡券广场',
+                            'type' => 'view',
+                            'url' => 'https://wechat.esw235.com/coupon'
+                        ),
+                    )
+                ),
+                array(
+                    'name' => '收款APP下载',
+                    'type' => 'view',
+                    'url' => 'https://www.esw235.com/index/app_download/index'
+                )
+            ),
+            "matchrule" => array(
+                "tag_id"=> "2",
+            )
+        ];
+
+        $result = $this->app->menu->addconditional($menu);
+        print_r($result);
+        $this->assertArrayHasKey('menuid',$result);
+
+        $result = $this->app->menu->delConditional('443695672');
+        print_r($result);
+        $this->assertArrayHasKey('errcode',$result);
+
+        $result = $this->app->menu->tryMatch('o5bZq53AKZnAoQd9avKYEFcm1X3c');
+        print_r($result);
+        $this->assertArrayHasKey('menu',$result);
+    }
+
+    /**
+     * 素材管理
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/24
+     */
+    public function testMaterial()
+    {
+//        $result = $this->app->material->upload('D:\\1.jpg','image');
+//        print_r($result);
+//        $this->assertArrayHasKey('media_id',$result);
     }
 }

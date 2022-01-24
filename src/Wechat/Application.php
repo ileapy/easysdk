@@ -14,6 +14,8 @@ use easysdk\Kernel\BaseContainer;
  * @property \easysdk\Wechat\user\Client                    $user
  * @property \easysdk\Wechat\tags\Client                    $tags
  * @property \easysdk\Wechat\qrcode\Client                  $qrcode
+ * @property \easysdk\Wechat\menu\Client                    $menu
+ * @property \easysdk\Wechat\material\Client                $material
  */
 class Application extends BaseContainer
 {
@@ -25,7 +27,9 @@ class Application extends BaseContainer
         base\ServiceProvider::class,
         user\ServiceProvider::class,
         tags\ServiceProvider::class,
-        qrcode\ServiceProvider::class
+        qrcode\ServiceProvider::class,
+        menu\ServiceProvider::class,
+        material\ServiceProvider::class
     ];
 
     /**
