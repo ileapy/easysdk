@@ -5,44 +5,33 @@
  * Copyright: php
  */
 
-namespace easysdk\UnionPayMini\token;
+namespace easysdk\Wechat\token;
 
-use easysdk\Kernel\Client\UnionPayMiniClient;
-use easysdk\Kernel\Support\Str;
+use easysdk\Kernel\Client\WechatMiniClient;
 
 /**
- * Class BackendToken
- * @package: easysdk\UnionPayMini\token
+ * Class AccessToken
+ * @package easysdk\UnionPayMini\access
  */
-class BackendToken extends UnionPayMiniClient
+class AccessToken extends WechatMiniClient
 {
     /**
      * @var string
      */
-    protected $endpoint = "1.0/backendToken";
-
-    /**
-     * @var array
-     */
-    protected $token;
+    protected $tokenKey = 'access_token';
 
     /**
      * @var string
      */
-    protected $tokenKey = 'backendToken';
-
-    /**
-     * @var string
-     */
-    protected $cachePrefix = 'easysdk.unionpaymini.token.backend_token.';
+    protected $cachePrefix = 'easysdk.wechatmini.token.access_token.';
 
     /**
      * @param false $refresh
-     * @return mixed
+     * @return array|mixed
+     * @author cfn <cfn@leapy.cn>
+     * @date 2021/8/16 13:42
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Psr\Cache\InvalidArgumentException
-     * Author cfn <cfn@leapy.cn>
-     * Date 2022/1/21
      */
     public function getToken($refresh = false)
     {
@@ -54,22 +43,22 @@ class BackendToken extends UnionPayMiniClient
             return $result;
         }
 
-        $result = $this->send($this->getCredentials());
+        $this->requestMethod = "GET";
+        $this->endpoint = "cgi-bin/token?grant_type=client_credential&appid={$this->config['appid']}&secret={$this->config['secret']}";
+        $result = $this->send();
 
         if (!isset($result[$this->tokenKey])) return $result;
-
-        $this->setToken($result[$this->tokenKey], $result['expiresIn'] ?: 0);
-
+        $this->setToken($result[$this->tokenKey],$result['expiresIn'] ?: 7200);
         return $result;
     }
 
     /**
-     * @param string $token
+     * @param $token
      * @param int $lifetime
      * @return $this
-     * @throws \Exception|\Psr\Cache\InvalidArgumentException
+     * @throws \Psr\Cache\InvalidArgumentException
      * @author cfn <cfn@leapy.cn>
-     * @date 2021/8/16 10:35
+     * @date 2021/8/19 10:17
      */
     protected function setToken($token, $lifetime = 7200)
     {
@@ -95,23 +84,20 @@ class BackendToken extends UnionPayMiniClient
      */
     protected function getCacheKey()
     {
-        return $this->cachePrefix.md5(json_encode($this->config));
+        return $this->cachePrefix.md5(json_encode($this->getCredentials()));
     }
 
     /**
      * @return array
      * @author cfn <cfn@leapy.cn>
-     * @date 2021/8/16 10:29
+     * @date 2021/8/16 11:21
      */
     protected function getCredentials()
     {
-        $nonceStr = Str::nonceStr();
-        $timestamp = time();
         return [
             'appId' => $this->config['appid'],
-            'nonceStr' => $nonceStr,
-            'timestamp' => $timestamp,
-            'signature' => Str::signature(['appId' => $this->config['appid'], 'nonceStr' => $nonceStr, 'secret' => $this->config['secret'], 'timestamp' => $timestamp])
+            'secret' => $this->config['secret'],
+            'grantType' => 'client_credential',
         ];
     }
 }

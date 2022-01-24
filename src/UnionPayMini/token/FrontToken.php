@@ -34,7 +34,7 @@ class FrontToken extends UnionPayMiniClient
     /**
      * @var string
      */
-    protected $cachePrefix = 'easysdk.miniprogram.access.front_token.';
+    protected $cachePrefix = 'easysdk.unionpaymini.token.front_token.';
 
     /**
      * @param false $refresh
@@ -60,7 +60,8 @@ class FrontToken extends UnionPayMiniClient
         if (!isset($result[$this->tokenKey])) return $result;
 
         $this->setToken($result[$this->tokenKey], $result['expiresIn'] ?: 0);
-        return $cacheItem->get();
+
+        return $result;
     }
 
     /**

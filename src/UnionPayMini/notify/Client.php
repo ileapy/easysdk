@@ -9,7 +9,7 @@ namespace easysdk\UnionPayMini\notify;
 
 use Closure;
 use easysdk\Kernel\Client\UnionPayMiniClient;
-use easysdk\Kernel\Traits\MiniProgramNotifyHandle;
+use easysdk\Kernel\Traits\UnionPayMiniNotifyHandle;
 
 /**
  * Class Client
@@ -18,7 +18,7 @@ use easysdk\Kernel\Traits\MiniProgramNotifyHandle;
  */
 class Client extends UnionPayMiniClient
 {
-    use MiniProgramNotifyHandle;
+    use UnionPayMiniNotifyHandle;
 
     /**
      * @param Closure $closure

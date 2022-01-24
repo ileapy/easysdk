@@ -33,7 +33,7 @@ class AccessToken extends UnionPayMiniClient
     /**
      * @var string
      */
-    protected $cachePrefix = 'easysdk.miniprogram.access.access_token.';
+    protected $cachePrefix = 'easysdk.unionpaymini.token.access_token.';
 
     /**
      * @var string
@@ -67,7 +67,7 @@ class AccessToken extends UnionPayMiniClient
 
         $this->setToken($result[$this->tokenKey], $result['openId'], $result['scope'], $result['unionId'],$result['expiresIn'] ?: 7200);
 
-        return $cacheItem->get();
+        return $result;
     }
 
     /**
