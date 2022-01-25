@@ -17,6 +17,7 @@ use easysdk\Kernel\BaseContainer;
  * @property \easysdk\ByteMini\secure\Client                  $secure
  * @property \easysdk\ByteMini\message\Client                 $message
  * @property \easysdk\ByteMini\other\Client                   $other
+ * @property \easysdk\ByteMini\order\Client                   $order
  */
 class Application extends BaseContainer
 {
@@ -31,7 +32,8 @@ class Application extends BaseContainer
         crypto\ServiceProvider::class,
         secure\ServiceProvider::class,
         message\ServiceProvider::class,
-        other\ServiceProvider::class
+        other\ServiceProvider::class,
+        order\ServiceProvider::class
     ];
 
     /**

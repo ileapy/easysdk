@@ -140,4 +140,16 @@ class ByteMiniTest extends TestCase
         print_r($result);
         $this->assertArrayHasKey('convert_result',$result);
     }
+
+    /**
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/25
+     */
+    public function testOrder()
+    {
+        $result = $this->app->order->push('','','','','','','','');
+        print_r($result);
+        $this->assertArrayHasKey('err_no',$result);
+    }
 }
