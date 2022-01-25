@@ -8,6 +8,7 @@
 namespace easysdk\UnionPayAppPayment\signature;
 
 use easysdk\Kernel\Client\UnionPayAppPaymentClient;
+use easysdk\Kernel\Exceptions\InvalidArgumentException;
 use easysdk\Kernel\Support\AcpService;
 
 /**
@@ -38,12 +39,12 @@ class Client extends UnionPayAppPaymentClient
      * @param array $params 签名参数
      * @author cfn <cfn@leapy.cn>
      * @date 2021/8/19 10:56
-     * @throws \Exception
+     * @throws InvalidArgumentException
      */
     public function sign(&$params)
     {
         if (!isset($this->config['signCertPath']) || empty($this->config['signCertPath']))
-            throw new \Exception('签名证书未配置！');
+            throw new InvalidArgumentException('签名证书未配置！');
         AcpService::sign($params, $this->config['signCertPath'], $this->config['signCertPwd']);
     }
 }

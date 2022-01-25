@@ -44,12 +44,71 @@ class UPAPTest extends TestCase
     }
 
     /**
+     * 订单
      * Author cfn <cfn@leapy.cn>
      * Date 2022/1/25
      */
     public function testOrder()
     {
-        $result = $this->app->order->pay(['orderId'=>date('YmdHis'),'txnAmt'=>'0.01']);
-        var_dump($this->app->signature->validate($result));
+        $result = $this->app->order->pay(['orderId'=>date('YmdHis'),'txnAmt'=>'1']);
+        var_dump($result);
+        $this->assertArrayHasKey('tn', $result);
+
+        $result = $this->app->order->query(['orderId'=>date('YmdHis'),'txnAmt'=>'1']);
+        var_dump($result);
+        $this->assertArrayHasKey('respCode', $result);
+
+        $result = $this->app->order->refund(['orderId'=>date('YmdHis'),'txnAmt'=>'1','origQryId'=>'xxxxx']);
+        var_dump($result);
+        $this->assertArrayHasKey('respCode', $result);
+
+        $result = $this->app->order->cancel(['orderId'=>date('YmdHis'),'txnAmt'=>'1','origQryId'=>'xxxxx']);
+        var_dump($result);
+        $this->assertArrayHasKey('respCode', $result);
+    }
+
+    /**
+     * 预授权
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \easysdk\Kernel\Exceptions\InvalidArgumentException
+     * @throws \easysdk\Kernel\Exceptions\ValidationFailException
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/25
+     */
+    public function testPreorder()
+    {
+        $result = $this->app->preorder->pay(['orderId'=>date('YmdHis'),'txnAmt'=>'1']);
+        var_dump($result);
+        $this->assertArrayHasKey('tn', $result);
+
+        $result = $this->app->preorder->finish(['orderId'=>date('YmdHis'),'txnAmt'=>'1','origQryId'=>'xxxxx']);
+        var_dump($result);
+        $this->assertArrayHasKey('respCode', $result);
+
+        $result = $this->app->preorder->refund(['orderId'=>date('YmdHis'),'txnAmt'=>'1','origQryId'=>'xxxxx']);
+        var_dump($result);
+        $this->assertArrayHasKey('respCode', $result);
+
+        $result = $this->app->preorder->cancel(['orderId'=>date('YmdHis'),'txnAmt'=>'1','origQryId'=>'xxxxx']);
+        var_dump($result);
+        $this->assertArrayHasKey('respCode', $result);
+    }
+
+    /**
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \easysdk\Kernel\Exceptions\InvalidArgumentException
+     * @throws \easysdk\Kernel\Exceptions\ValidationFailException
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/25
+     */
+    public function testFile()
+    {
+        $result = $this->app->file->updatePublicKey(['orderId'=>date('YmdHis')]);
+        var_dump($result);
+        $this->assertArrayHasKey('respCode', $result);
+
+        $result = $this->app->file->download(['orderId'=>date('YmdHis'),'settleDate'=>date('md')]);
+        var_dump($result);
+        $this->assertArrayHasKey('respCode', $result);
     }
 }

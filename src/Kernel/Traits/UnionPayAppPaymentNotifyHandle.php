@@ -7,6 +7,7 @@
 
 namespace easysdk\Kernel\Traits;
 
+use easysdk\Kernel\Exceptions\ValidationFailException;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -23,12 +24,6 @@ trait UnionPayAppPaymentNotifyHandle
     protected $data = [];
 
     /**
-     * 是否验签
-     * @var bool
-     */
-    public $isCheck = true;
-
-    /**
      * @author cfn <cfn@leapy.cn>
      * @date 2021/8/20 9:34
      */
@@ -39,6 +34,7 @@ trait UnionPayAppPaymentNotifyHandle
 
     /**
      * @return array|string
+     * @throws ValidationFailException
      * @throws Exception
      * @author cfn <cfn@leapy.cn>
      * @date 2021/8/20 9:37
@@ -59,9 +55,8 @@ trait UnionPayAppPaymentNotifyHandle
             throw new Exception('Invalid request.', 400);
         }
 
-        if ($this->isCheck)
-            if (!$this->app->crypto->verify($data))
-                throw new Exception('Invalid signature.', 400);
+        if (!$this->app->signature->validate($data))
+            throw new ValidationFailException('验签失败', 400);
 
         return $this->data = $data;
     }

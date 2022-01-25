@@ -21,15 +21,13 @@ class Client extends UnionPayAppPaymentClient
 
     /**
      * @param Closure $closure
-     * @param bool $isCheck
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \easysdk\Kernel\Exceptions\ValidationFailException
      * @author cfn <cfn@leapy.cn>
      * @date 2021/8/20 11:49
-     * @throws \Exception
      */
-    public function unit(Closure $closure, $isCheck = true)
+    public function unit(Closure $closure)
     {
-        $this->isCheck = $isCheck;
         call_user_func($closure, $this->getData(), [$this]);
         return $this->toResponse();
     }

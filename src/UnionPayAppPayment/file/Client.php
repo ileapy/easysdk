@@ -7,7 +7,8 @@
 
 namespace easysdk\UnionPayAppPayment\file;
 
-use Exception;
+use easysdk\Kernel\Exceptions\InvalidArgumentException;
+use easysdk\Kernel\Exceptions\ValidationFailException;
 use easysdk\Kernel\Client\UnionPayAppPaymentClient;
 use easysdk\Kernel\Support\AcpService;
 
@@ -21,13 +22,14 @@ class Client extends UnionPayAppPaymentClient
     /**
      * 此接口暂不可用
      * 银联加密公钥更新查询接口
-     * @throws Exception|\GuzzleHttp\Exception\GuzzleException
+     * @throws InvalidArgumentException|\GuzzleHttp\Exception\GuzzleException
+     * @throws ValidationFailException
      * @author cfn <cfn@leapy.cn>
      * @date 2021/8/20 19:39
      */
     public function updatePublicKey($params)
     {
-        $this->endpoint = "backTransReq.do";
+        $this->setEndpoint("backTransReq.do");
 
         $base = [
             // 产品类型
@@ -46,13 +48,15 @@ class Client extends UnionPayAppPaymentClient
 
         // 必填项校验
         if (!isset($data['orderId']))
-            throw new \Exception("商户订单号[orderId]必传，自定义");
+            throw new InvalidArgumentException("商户订单号[orderId]必传，自定义");
 
         // 签名
         $this->app->signature->sign($data, $this->config['signCertPath'], $this->config['signCertPwd']);
 
-        // 数据返回
-        return $this->send($data);
+        // 验签
+        $result = $this->send($data);
+        if (!$this->app->signature->validate($result)) throw new ValidationFailException('验签失败');
+        return $result;
     }
 
     /**
@@ -60,13 +64,14 @@ class Client extends UnionPayAppPaymentClient
      * @param array $params
      * @return false|string[]
      * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws Exception
+     * @throws InvalidArgumentException
+     * @throws ValidationFailException
      * @author cfn <cfn@leapy.cn>
      * @date 2021/8/20 19:58
      */
     public function download($params)
     {
-        $this->endpoint = ""; // 文件下载直接填空
+        $this->setEndpoint("",true);
 
         $base = [
             // 产品类型
@@ -87,13 +92,15 @@ class Client extends UnionPayAppPaymentClient
 
         // 必填项校验
         if (!isset($data['settleDate']))
-            throw new \Exception("清算日期[settleDate]必传，格式为MMDD");
+            throw new InvalidArgumentException("清算日期[settleDate]必传，格式为MMDD");
 
         // 签名
         $this->app->signature->sign($data, $this->config['signCertPath'], $this->config['signCertPwd']);
 
-        // 数据返回
-        return $this->send($data);
+        // 验签
+        $result = $this->send($data);
+        if (!$this->app->signature->validate($result)) throw new ValidationFailException('验签失败');
+        return $result;
     }
 
     /**
@@ -101,17 +108,17 @@ class Client extends UnionPayAppPaymentClient
      * @param array $params download返回的数据
      * @param string $filePath 文件保存地址
      * @return array|false
+     * @throws InvalidArgumentException
      * @author cfn <cfn@leapy.cn>
      * @date 2021/8/20 20:14
-     * @throws Exception
      */
     public function save($params, $filePath)
     {
         // 文件不存在
         if ($params['respCode'] == "98")
-            throw new Exception('文件不存在。', 400);
+            throw new InvalidArgumentException('文件不存在。', 400);
         elseif ($params['respCode'] != "00")
-            throw new Exception('获取失败。', 400);
+            throw new InvalidArgumentException('获取失败。', 400);
 
         // 成功返回文件名称 失败返回false
         if (AcpService::decodeFileContent($params, $filePath))
