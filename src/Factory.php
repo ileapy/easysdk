@@ -7,6 +7,7 @@ namespace easysdk;
  * @package: easysdk
  *
  * @method static \easysdk\UnionPayMini\Application        UnionPayMini(array $config)
+ * @method static \easysdk\UnionPayAppPayment\Application  UnionPayAppPayment(array $config)
  * @method static \easysdk\WechatMini\Application          WechatMini(array $config)
  * @method static \easysdk\Wechat\Application              Wechat(array $config)
  * @method static \easysdk\ByteMini\Application            ByteMini(array $config)
