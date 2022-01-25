@@ -150,6 +150,6 @@ class ByteMiniTest extends TestCase
     {
         $result = $this->app->order->push('','','','','','','','');
         print_r($result);
-        $this->assertArrayHasKey('err_no',$result);
+        $this->assertArrayHasKey('err_code',$result);
     }
 }
