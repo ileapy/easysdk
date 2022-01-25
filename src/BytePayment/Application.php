@@ -10,6 +10,7 @@ use easysdk\Kernel\BaseContainer;
  * Copyright: easysdk
  *
  * @property \easysdk\BytePayment\order\Client              $order
+ * @property \easysdk\BytePayment\merchant\Client           $merchant
  */
 class Application extends BaseContainer
 {
@@ -18,6 +19,7 @@ class Application extends BaseContainer
      */
     protected $providers = [
         order\ServiceProvider::class,
+        merchant\ServiceProvider::class
     ];
 
     /**

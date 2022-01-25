@@ -75,4 +75,32 @@ class BytePaymentTest extends TestCase
         print_r($result);
         $this->assertArrayHasKey('err_no',$result);
     }
+
+    /**
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/25
+     */
+    public function testMerchant()
+    {
+        $result = $this->app->merchant->addMerchant('','','');
+        print_r($result);
+        $this->assertArrayHasKey('err_no',$result);
+
+        $result = $this->app->merchant->addSubMerchant();
+        print_r($result);
+        $this->assertArrayHasKey('err_no',$result);
+
+        $result = $this->app->merchant->appAddSubMerchant();
+        print_r($result);
+        $this->assertArrayHasKey('err_no',$result);
+
+        $result = $this->app->merchant->getAppMerchant();
+        print_r($result);
+        $this->assertArrayHasKey('err_no',$result);
+
+        $result = $this->app->merchant->queryMerchantStatus();
+        print_r($result);
+        $this->assertArrayHasKey('err_no',$result);
+    }
 }
