@@ -40,6 +40,11 @@ trait HasHttpRequests
     /**
      * @var array
      */
+    protected $headers = [];
+
+    /**
+     * @var array
+     */
     protected static $defaults = [
         'curl' => [
             CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
@@ -184,6 +189,7 @@ trait HasHttpRequests
     {
         if (isset($options['json']) && is_array($options['json'])) {
             $options['headers'] = array_merge(isset($options['headers']) ? $options['headers'] : [], ['Content-Type' => 'application/json']);
+            $options['headers'] = array_merge($options['headers'], $this->headers);
             if (empty($options['json'])) {
                 $options['body'] = \GuzzleHttp\json_encode($options['json'], JSON_FORCE_OBJECT);
             } else {
@@ -259,5 +265,16 @@ trait HasHttpRequests
     protected function getEndpoint()
     {
         return $this->endpoint;
+    }
+
+    /**
+     * 设置请求头
+     * @param array $headers
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/24
+     */
+    protected function setHeaders($headers)
+    {
+        $this->headers = array_merge($this->headers, $headers);
     }
 }

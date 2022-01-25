@@ -11,7 +11,7 @@ use easysdk\Factory;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class WechatTest
+ * Class ByteMiniTest
  * @package: easysdk
  */
 class ByteMiniTest extends TestCase
@@ -51,6 +51,61 @@ class ByteMiniTest extends TestCase
     {
         $result = $this->app->access_token->getToken();
         print_r($result);
-//        $this->assertArrayHasKey('access_token',$result);
+        $this->assertArrayHasKey('access_token',$result);
+    }
+
+    /**
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/24
+     */
+    public function testAuth()
+    {
+        $result = $this->app->auth->code2Session('PAxKa3Xvpa8UuvCJXVwfx7z3QJQ8P5fyW9Bxb8FCkeqo8uaHBWMGARoqoLhDkGwUX4XYZRA1tJRjfesKbxX7AC-N312F4pc82iTyeDXZOhNkl1XaMHUkuBdlJXc');
+        print_r($result);
+        $this->assertArrayHasKey('session_key',$result);
+    }
+
+    /**
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/24
+     */
+    public function testQrcode()
+    {
+        $result = $this->app->qrcode->create('');
+        print_r($result);
+    }
+
+    /**
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/24
+     */
+    public function testStorage()
+    {
+        $result = $this->app->storage->setUserStorage('d9b4a67e-ca44-4e87-8edc-c211e172d4d4','rUChRwoaSmCJ+EL9HJPiZQ==',[['key'=>'name','value'=>'展示']]);
+        print_r($result);
+        $this->assertArrayHasKey('error',$result);
+
+        $result = $this->app->storage->removeUserStorage('d9b4a67e-ca44-4e87-8edc-c211e172d4d4','rUChRwoaSmCJ+EL9HJPiZQ==',['name']);
+        print_r($result);
+        $this->assertArrayHasKey('error',$result);
+    }
+
+    /**
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/24
+     */
+    public function testSecure()
+    {
+        $result = $this->app->secure->text(['中国人不骗中国人']);
+        print_r($result);
+        $this->assertArrayHasKey('log_id',$result);
+
+        $result = $this->app->secure->image("https://img-blog.csdnimg.cn/img_convert/acbeb4ca1166bf20a9e3a20c96800610.png");
+        print_r($result);
+        $this->assertArrayHasKey('error',$result);
     }
 }

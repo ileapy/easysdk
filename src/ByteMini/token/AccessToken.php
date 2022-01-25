@@ -11,7 +11,7 @@ use easysdk\Kernel\Client\ByteMiniClient;
 
 /**
  * Class AccessToken
- * @package easysdk\UnionPayMini\access
+ * @package easysdk\ByteMini\access
  */
 class AccessToken extends ByteMiniClient
 {

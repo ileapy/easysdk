@@ -80,6 +80,7 @@ class ByteMiniClient
      */
     protected function getCredentials($data)
     {
+        $data['access_token'] = $this->app->access_token->getToken()['access_token'];
         return array_filter($data);
     }
 
@@ -91,7 +92,6 @@ class ByteMiniClient
      */
     protected function setEndpoint($uri, $data = [])
     {
-        $data['access_token'] = $this->app->access_token->getToken()['access_token'];
         $this->endpoint = $uri . "?" . http_build_query(array_filter($data));
     }
 }

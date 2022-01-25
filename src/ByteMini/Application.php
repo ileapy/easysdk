@@ -10,6 +10,11 @@ use easysdk\Kernel\BaseContainer;
  * Copyright: easysdk
  *
  * @property \easysdk\ByteMini\token\AccessToken              $access_token
+ * @property \easysdk\ByteMini\auth\Client                    $auth
+ * @property \easysdk\ByteMini\qrcode\Client                  $qrcode
+ * @property \easysdk\ByteMini\storage\Client                 $storage
+ * @property \easysdk\ByteMini\crypto\Client                  $crypto
+ * @property \easysdk\ByteMini\secure\Client                  $secure
  */
 class Application extends BaseContainer
 {
@@ -18,6 +23,11 @@ class Application extends BaseContainer
      */
     protected $providers = [
         token\ServiceProvider::class,
+        auth\ServiceProvider::class,
+        qrcode\ServiceProvider::class,
+        storage\ServiceProvider::class,
+        crypto\ServiceProvider::class,
+        secure\ServiceProvider::class
     ];
 
     /**
