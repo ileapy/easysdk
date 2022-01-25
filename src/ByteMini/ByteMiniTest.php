@@ -108,4 +108,36 @@ class ByteMiniTest extends TestCase
         print_r($result);
         $this->assertArrayHasKey('error',$result);
     }
+
+    /**
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/25
+     */
+    public function testMessage()
+    {
+        $result = $this->app->message->sendMessage('','',[],'');
+        print_r($result);
+        $this->assertArrayHasKey('err_no',$result);
+    }
+
+    /**
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/25
+     */
+    public function testOther()
+    {
+        $result = $this->app->other->shareConfig('',1);
+        print_r($result);
+        $this->assertArrayHasKey('err_no',$result);
+
+        $result = $this->app->other->videoIdToOpenItemId(['123'],'456');
+        print_r($result);
+        $this->assertArrayHasKey('convert_result',$result);
+
+        $result = $this->app->other->openItemIdToEncryptId(['123'],'456');
+        print_r($result);
+        $this->assertArrayHasKey('convert_result',$result);
+    }
 }

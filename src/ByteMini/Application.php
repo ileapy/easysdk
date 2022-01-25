@@ -15,6 +15,8 @@ use easysdk\Kernel\BaseContainer;
  * @property \easysdk\ByteMini\storage\Client                 $storage
  * @property \easysdk\ByteMini\crypto\Client                  $crypto
  * @property \easysdk\ByteMini\secure\Client                  $secure
+ * @property \easysdk\ByteMini\message\Client                 $message
+ * @property \easysdk\ByteMini\other\Client                   $other
  */
 class Application extends BaseContainer
 {
@@ -27,7 +29,9 @@ class Application extends BaseContainer
         qrcode\ServiceProvider::class,
         storage\ServiceProvider::class,
         crypto\ServiceProvider::class,
-        secure\ServiceProvider::class
+        secure\ServiceProvider::class,
+        message\ServiceProvider::class,
+        other\ServiceProvider::class
     ];
 
     /**

@@ -27,7 +27,7 @@ class Client extends ByteMiniClient
      * @author cfn <cfn@leapy.cn>
      * @date 2021/8/16 19:23
      */
-    public function notify($tpl_id, $open_id, $data, $page = '')
+    public function sendMessage($tpl_id, $open_id, $data, $page = '')
     {
         $app_id = $this->config['appid'];
         $this->setEndpoint("apps/subscribe_notification/developer/v1/notify");
