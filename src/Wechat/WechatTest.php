@@ -329,4 +329,30 @@ class WechatTest extends TestCase
         $result = $this->app->material->updateNews('',[],0);
         print_r($result);
     }
+
+    /**
+     * 消息接口
+     * Author cfn <cfn@leapy.cn>
+     * Date 2022/1/26
+     */
+    public function testMessget()
+    {
+        $this->app->message->text('',"文本信息");
+        $this->app->message->image('',"cKTTtuqwxLkMmrxEG7PTIzFWoUqpwFuH8_0aYU_GEMLpO-b2Z7l_AFQi94-GMDWC");
+        $this->app->message->video('',"JV623HV_LTDSEJsN0YLtrfBPv2RcREEbAaSNSoUDKMSFkoc5lv5bWFkr21bCv0Bj","213","32");
+        $this->app->message->voice('',"JV623HV_LTDSEJsN0YLtrfBPv2RcREEbAaSNSoUDKMSFkoc5lv5bWFkr21bCv0Bj");
+        $this->app->message->music('',"cKTTtuqwxLkMmrxEG7PTIzFWoUqpwFuH8_0aYU_GEMLpO-b2Z7l_AFQi94-GMDWC");
+        $this->app->message->news('',"ce测试","213","https://i.leapy.cn/upload/images/20210601/code.svg",'https://tool.leapy.cn/');
+    }
+
+    /**
+     * testAuth
+     * Author: cfn <cfn@leapy.cn>
+     * Date 2022/3/24
+     */
+    public function testAuth()
+    {
+        $res = $this->app->auth->getRedirectUri('http://h5.upay.com/',"snsapi_base",'123');
+        echo $res;
+    }
 }

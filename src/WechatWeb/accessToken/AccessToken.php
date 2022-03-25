@@ -5,15 +5,15 @@
  * Copyright: php
  */
 
-namespace easysdk\Wechat\token;
+namespace easysdk\WechatWeb\accessToken;
 
-use easysdk\Kernel\Client\WechatClient;
+use easysdk\Kernel\Client\WechatWebClient;
 
 /**
  * Class AccessToken
  * @package easysdk\UnionPayMini\access
  */
-class AccessToken extends WechatClient
+class AccessToken extends WechatWebClient
 {
     /**
      * @var string
@@ -23,9 +23,15 @@ class AccessToken extends WechatClient
     /**
      * @var string
      */
-    protected $cachePrefix = 'easysdk.wechat.token.access_token.';
+    protected $cachePrefix = 'easysdk.wechat.web.token.access_token.';
 
     /**
+     * @var string
+     */
+    protected $code = "";
+
+    /**
+     * @param string $code
      * @param false $refresh
      * @return array|mixed
      * @author cfn <cfn@leapy.cn>
@@ -33,8 +39,10 @@ class AccessToken extends WechatClient
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function getToken($refresh = false)
+    public function getToken($code="", $refresh=false)
     {
+        $this->code = $code;
+
         $cacheKey = $this->getCacheKey();
         $cache = $this->getCache();
         $cacheItem = $cache->getItem($cacheKey);
@@ -44,11 +52,11 @@ class AccessToken extends WechatClient
         }
 
         $this->requestMethod = "GET";
-        $this->endpoint = "cgi-bin/token?grant_type=client_credential&appid={$this->config['appid']}&secret={$this->config['secret']}";
+        $this->endpoint = "sns/oauth2/access_token?appid={$this->config['appid']}&secret={$this->config['secret']}&code={$code}&grant_type=authorization_code";
         $result = $this->send();
 
         if (!isset($result[$this->tokenKey])) return $result;
-        $this->setToken($result[$this->tokenKey],$result['expiresIn'] ?: 7200);
+        $this->setToken($result,$result['expires_in'] ?: 7200);
         return $result;
     }
 
@@ -60,7 +68,7 @@ class AccessToken extends WechatClient
      * @author cfn <cfn@leapy.cn>
      * @date 2021/8/19 10:17
      */
-    protected function setToken($token, $lifetime = 7200)
+    protected function setToken($data, $lifetime = 7200)
     {
         $cacheKey = $this->getCacheKey();
         $cache = $this->getCache();
@@ -69,8 +77,11 @@ class AccessToken extends WechatClient
         $cacheItem->expiresAfter($lifetime);
 
         $cacheItem->set(array(
-            $this->tokenKey => $token,
-            'expiresIn' => $lifetime
+            $this->tokenKey => $data[$this->tokenKey],
+            'expires_in' => $data['expires_in'],
+            'openId' => $data['openid'],
+            'scope' => $data['scope'],
+            'refresh_token'=> $data['refresh_token']
         ));
 
         // 保存
@@ -97,7 +108,8 @@ class AccessToken extends WechatClient
         return [
             'appId' => $this->config['appid'],
             'secret' => $this->config['secret'],
-            'grantType' => 'client_credential',
+            'code' => $this->code,
+            'grantType' => 'authorization_code',
         ];
     }
 }

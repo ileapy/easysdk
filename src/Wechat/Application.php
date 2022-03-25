@@ -11,11 +11,14 @@ use easysdk\Kernel\BaseContainer;
  *
  * @property \easysdk\Wechat\token\AccessToken              $access_token
  * @property \easysdk\Wechat\base\Client                    $base
+ * @property \easysdk\WechatWeb\auth\Client                    $auth
  * @property \easysdk\Wechat\user\Client                    $user
  * @property \easysdk\Wechat\tags\Client                    $tags
  * @property \easysdk\Wechat\qrcode\Client                  $qrcode
  * @property \easysdk\Wechat\menu\Client                    $menu
  * @property \easysdk\Wechat\material\Client                $material
+ * @property \easysdk\Wechat\notify\Client                  $notify
+ * @property \easysdk\Wechat\message\Client                 $message
  */
 class Application extends BaseContainer
 {
@@ -29,7 +32,10 @@ class Application extends BaseContainer
         tags\ServiceProvider::class,
         qrcode\ServiceProvider::class,
         menu\ServiceProvider::class,
-        material\ServiceProvider::class
+        material\ServiceProvider::class,
+        notify\ServiceProvider::class,
+        message\ServiceProvider::class,
+        \easysdk\WechatWeb\auth\ServiceProvider::class
     ];
 
     /**

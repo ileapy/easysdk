@@ -11,7 +11,7 @@ use easysdk\Kernel\Traits\InteractsWithCache;
  * Datetime: 2022/1/21
  * Copyright: easysdk
  */
-class WechatClient
+class WechatWebClient
 {
     use HasHttpRequests;
     use InteractsWithCache;
