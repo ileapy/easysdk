@@ -25,8 +25,8 @@ class AliyunSmsTest extends TestCase
      * @var array
      */
     public $options = [
-        'AkID' => 'LTAI5tJrCBzgKVCrYSfM5n5t',
-        'AKSecret' => '0tgNs4w1iVeXdiKg7DCp68P6IKJC55'
+        'AccessKeyId' => 'LTAI5tEc9dMSQBSXDJ442fJZ',
+        'AccessKeySecret' => 'EgybUVHxZAedfDyhLf2AbqHCZLOye6'
     ];
 
     /**
@@ -48,11 +48,11 @@ class AliyunSmsTest extends TestCase
      */
     public function testSms()
     {
-        $res = $this->app->sms->sendSms('18438622598','里派','SMS_237211427',['code'=>123456]);
+        $res = $this->app->sms->sendSms('18438622598','里派','SMS_237211426',['code'=>123456]);
         $this->assertArrayHasKey('Message',$res);
         var_dump($res);
 
-        $res = $this->app->sms->sendBatchSms(['18736647561','15639267560'],['里派','里派'],'SMS_237211427',[['code'=>123456],['code'=>123456]]);
+        $res = $this->app->sms->sendBatchSms(['18736647561','15639267560'],['里派','里派'],'SMS_237211426',[['code'=>123456],['code'=>123456]]);
         $this->assertArrayHasKey('Message',$res);
         var_dump($res);
     }

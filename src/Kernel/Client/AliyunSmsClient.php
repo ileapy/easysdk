@@ -91,7 +91,7 @@ class AliyunSmsClient
         $_str = '';
         foreach ($data as $key => $value) $_str .= '&' . $this->percentEncode($key) . '=' . $this->percentEncode($value);
         $stringToSign = 'GET&%2F&' . $this->percentencode(substr($_str,1));
-        $data['Signature'] = base64_encode(hash_hmac('sha1', $stringToSign, $this->config['AKSecret'] . '&',true));
+        $data['Signature'] = base64_encode(hash_hmac('sha1', $stringToSign, $this->config['AccessKeySecret'] . '&',true));
     }
 
     /**
@@ -120,7 +120,7 @@ class AliyunSmsClient
         return [
             'Version' => '2017-05-25',
             'Format' => 'JSON',
-            'AccessKeyId' => $this->config['AkID'],
+            'AccessKeyId' => $this->config['AccessKeyId'],
             'SignatureNonce' => time() . rand(1000,9999),
             'Timestamp' => gmdate("Y-m-d\TH:i:s\Z"),
             'SignatureMethod' => 'HMAC-SHA1',

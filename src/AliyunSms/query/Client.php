@@ -31,7 +31,7 @@ class Client extends AliyunSmsClient
     public function querySendStatistics($StartDate, $EndDate, $PageIndex=1, $PageSize=20, $IsGlobe=1)
     {
         $params = [
-            'Action'=> 'QuerySendStatistics ',
+            'Action'=> 'QuerySendStatistics',
             'IsGlobe' => $IsGlobe,
             'StartDate' => $StartDate,
             'EndDate' => $EndDate,
@@ -39,8 +39,8 @@ class Client extends AliyunSmsClient
             'PageSize' => $PageSize
         ];
         $data = array_replace_recursive($this->getCommonData(), $params);
-        var_dump($data);
         $this->signature($data);
+        $this->requestMethod = 'POST';
         $this->setEndpoint('',$data);
         return $this->send();
     }
