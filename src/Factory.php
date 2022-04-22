@@ -14,6 +14,7 @@ namespace easysdk;
  * @method static \easysdk\Wechat\Application              Wechat(array $config)
  * @method static \easysdk\ByteMini\Application            ByteMini(array $config)
  * @method static \easysdk\BytePayment\Application         BytePayment(array $config)
+ * @method static \easysdk\UnionPayUtpPayment\Application  UnionPayUtpPayment(array $config)
  */
 class Factory
 {
