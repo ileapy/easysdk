@@ -90,17 +90,61 @@ class UnionPayUtpPaymentClient
             'format' => 'json',
             'charset' => 'utf-8',
             'signType' => 'RSA2',
-            'timestamp' => date('YmdHis'),
+            'timestamp' => date("YmdHis"),
             'version' => '2.0.0',
             'notifyUrl' => $this->config['notifyUrl'],
-            'bizContent' => json_encode($data, true)
+            'bizContent' => json_encode($data, JSON_UNESCAPED_UNICODE)
         ];
+
+        // 过滤非空项
         $param = array_filter($param);
         ksort($param);
-        $arr = http_build_query($param);
-        openssl_sign($arr,$sign, $this->getPrivateKey(),OPENSSL_ALGO_SHA256);
+        // 排序
+        $queryParam_arr = [];
+        foreach ($param as $k => $v) {
+            $queryParam_arr[] = $k . "=" . $v;
+        }
+        // kv拼接
+        $str = implode("&", $queryParam_arr);
+        // sha256
+        $str = hash("sha256", $str);
+        // 签名
+        $key = openssl_get_privatekey($this->getPrivateKey());
+        openssl_sign($str,$sign, $key,OPENSSL_ALGO_SHA256);
+        openssl_free_key($key);
         $param['sign'] = base64_encode($sign);
         return $param;
+    }
+
+    /**
+     * verify 验签
+     * Author: cfn <cfn@leapy.cn>
+     * Date 2022/4/24
+     * @param $data
+     * @return bool
+     */
+    protected function verify($data)
+    {
+        $sign = $data['sign'];
+        unset($data['sign']);
+
+        // 过滤非空项
+        $data = array_filter($data);
+        ksort($data);
+        // 排序
+        $queryParam_arr = [];
+        foreach ($data as $k => $v) {
+            $queryParam_arr[] = $k . "=" . $v;
+        }
+        // kv拼接
+        $str = implode("&", $queryParam_arr);
+        // sha256
+        $str = hash("sha256", $str);
+        // 签名
+        $key = openssl_get_publickey($this->getPublicKey());
+        $result = (bool)openssl_verify($str,base64_decode($sign), $key,OPENSSL_ALGO_SHA256);
+        openssl_free_key($key);
+        return $result;
     }
 
     /**
@@ -110,7 +154,7 @@ class UnionPayUtpPaymentClient
      */
     private function getPrivateKey()
     {
-        return $this->config['priKey'];
+        return  "-----BEGIN PRIVATE KEY-----\n" . wordwrap($this->config['priKey'], 64, "\n", true) . "\n-----END PRIVATE KEY-----";
     }
 
     /**
@@ -120,6 +164,6 @@ class UnionPayUtpPaymentClient
      */
     private function getPublicKey()
     {
-        return $this->config['pubKey'];
+        return  "-----BEGIN PUBLIC KEY-----\n" . wordwrap($this->config['pubKey'], 64, "\n", true) . "\n-----END PUBLIC KEY-----";
     }
 }

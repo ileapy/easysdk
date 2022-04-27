@@ -13,6 +13,7 @@ use easysdk\Kernel\BaseContainer;
  * Class Application
  *
  * @property \easysdk\UnionPayUtpPayment\auth\Client                    $auth
+ * @property \easysdk\UnionPayUtpPayment\js\Client                      $js
  *
  * @package easysdk\UnionPayAppPayment
  */
@@ -23,6 +24,7 @@ class Application extends BaseContainer
      */
     protected $providers = [
         auth\ServiceProvider::class,
+        js\ServiceProvider::class
     ];
 
     /**
@@ -43,7 +45,7 @@ class Application extends BaseContainer
                 'Content-Type' => 'application/json'
             ]
         ],
-        'notifyUrl' => '',
+        'notifyUrl' => ''
     ];
 
     /**

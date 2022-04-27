@@ -38,7 +38,7 @@ class Client extends UnionPayUtpPaymentClient
      * @param string $app_up_identifier
      * @return array|mixed
      */
-    public function userId($user_auth_code, $transTp='01', $subTransTp='0162',  $app_up_identifier = "UnionPay/1.0 ICBCeLife")
+    public function userId($user_auth_code, $transTp='01', $subTransTp='0162',  $app_up_identifier = "UnionPay/1.0 CloudPay")
     {
         $data = [
             'svcApi' => 'up.fpsd.trade.utp.userid.get',
@@ -48,6 +48,7 @@ class Client extends UnionPayUtpPaymentClient
             'app_up_identifier' => $app_up_identifier
         ];
         $res = $this->send($data);
+        if (!$this->verify($res)) return ['code'=>1,'msg'=>'验签失败'];
         return $res;
     }
 }

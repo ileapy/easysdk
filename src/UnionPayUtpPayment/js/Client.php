@@ -35,7 +35,9 @@ class Client extends UnionPayUtpPaymentClient
         $data = array_merge_recursive($data, $params);
         // 验签
         $result = $this->send($data);
-        if (!$this->app->signature->validate($result)) throw new ValidationFailException('验签失败');
+
+        var_dump($result);
+        if (!$this->verify($result)) throw new ValidationFailException('验签失败');
         return $result;
     }
 
@@ -56,7 +58,8 @@ class Client extends UnionPayUtpPaymentClient
         $data = array_merge_recursive($data, $params);
         // 验签
         $result = $this->send($data);
-        if (!$this->app->signature->validate($result)) throw new ValidationFailException('验签失败');
+
+        if (!$this->verify($result)) throw new ValidationFailException('验签失败');
         return $result;
     }
 
@@ -77,7 +80,8 @@ class Client extends UnionPayUtpPaymentClient
         $data = array_merge_recursive($data, $params);
         // 验签
         $result = $this->send($data);
-        if (!$this->app->signature->validate($result)) throw new ValidationFailException('验签失败');
+
+        if (!$this->verify($result)) throw new ValidationFailException('验签失败');
         return $result;
     }
 
@@ -99,7 +103,8 @@ class Client extends UnionPayUtpPaymentClient
         $data = array_merge_recursive($data, $params);
         // 验签
         $result = $this->send($data);
-        if (!$this->app->signature->validate($result)) throw new ValidationFailException('验签失败');
+
+        if (!$this->verify($result)) throw new ValidationFailException('验签失败');
         return $result;
     }
 }
